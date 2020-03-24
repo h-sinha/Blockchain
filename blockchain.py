@@ -71,7 +71,10 @@ class Blockchain(object):
 		returns True if hash(last_proof, proof) contains 4 leading zeros
 		otherwise False 
 		'''
-
+		guess = f'{last_proof}{proof}'.encode()
+		guess_hash = hashlib.sha256(guess)
+		return guess_hash[:4] == "0000"
+		
 	@property
 	def last_block(self):
 		# Returns the last block in the chain
