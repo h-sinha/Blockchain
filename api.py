@@ -1,7 +1,3 @@
-import hashlib
-import json
-from textwrap import dedent
-from time import time
 from blockchain import Blockchain
 from uuid import uuid4
 from flask import Flask, jsonify, request
@@ -11,7 +7,9 @@ app = Flask(__name__)
 
 # Generate a globally unique address for this node
 node_identifier = str(uuid4()).replace('-', '')
-
+node_identifier1 = str(uuid4()).replace('-', '')
+print(node_identifier)
+print(node_identifier1)
 # Instantiate the Blockchain
 blockchain = Blockchain()
 
@@ -46,18 +44,18 @@ def mine():
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
 	values = request.get_json()
-    
+	print(values)
     # Check if all required fields are available in posted data
-    required = ['sender', 'recipient', 'amount']
-    for r in required:
-    	if r not in values:
-    		return 'Missing values', 400
+	required = ['sender', 'recipient', 'amount']
+	for r in required:
+		if r not in values:
+			return 'Missing values', 400
 
-    index = blockchain.new_transaction(values['sender'], 
+	index = blockchain.new_transaction(values['sender'], 
     	values['recipient'], values['amount'])
 
-    response = {'message' : f'Transaction will be added to Block {index}'}
-    return jsonify(response), 200
+	response = {'message' : f'Transaction will be added to Block {index}'}
+	return jsonify(response), 200
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
