@@ -7,11 +7,44 @@ app = Flask(__name__)
 
 # Generate a globally unique address for this node
 node_identifier = str(uuid4()).replace('-', '')
-node_identifier1 = str(uuid4()).replace('-', '')
-print(node_identifier)
-print(node_identifier1)
+
 # Instantiate the Blockchain
 blockchain = Blockchain()
+
+@app.route('/nodes/register', methods=['POST'])
+def register_nodes():
+	values = request.get_json()
+
+	nodes = values.get('nodes')
+	if nodes is None:
+		return "Error: Please supply a valid list of nodes", 400
+
+	for node in nodes:
+		blockchain.register_node(node)
+
+	response = {
+		'message': 'New nodes have been added',
+		'total_nodes': list(blockchain.nodes),
+	}
+	return jsonify(response), 201
+
+@app.route('/nodes/resolve', methods=['GET'])
+def consensus():
+	replaced = blockchain.resolve_conflicts()
+
+	if replaced:
+		response = {
+			"message":'Our chain was replaced',
+			'new_chain':blockchain.chain
+		}
+	else:
+		response = {
+			"message":'Our chain is authoritative',
+			'new_chain':blockchain.chain
+		}
+	return jsonify(response), 200
+
+
 
 @app.route('/mine', methods=['GET'])
 def mine():
@@ -44,7 +77,6 @@ def mine():
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
 	values = request.get_json()
-	print(values)
     # Check if all required fields are available in posted data
 	required = ['sender', 'recipient', 'amount']
 	for r in required:
