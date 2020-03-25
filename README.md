@@ -31,7 +31,7 @@ Resolves any conflicts to ensure a node has the correct chain
   // If chain is replaced
   {
       "message":"Our chain was replaced",
-			"new_chain": {
+      "new_chain": {
             "index": 1,
             "previous_hash": 1,
             "proof": 100,
@@ -55,7 +55,7 @@ Resolves any conflicts to ensure a node has the correct chain
   // Chain is not replaced
   {
       "message":"Our chain is authoritative",
-			"new_chain": {
+      "new_chain": {
             "index": 1,
             "previous_hash": 1,
             "proof": 100,
